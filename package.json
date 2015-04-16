@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/olegzxz/rpi-proxy-server",
   "dependencies": {
-    "express": "^4.12.3"
+    "express": "^4.12.3",
+    "socket.io": "^1.3.5"
   }
 }
