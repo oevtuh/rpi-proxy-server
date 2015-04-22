@@ -1,30 +1,21 @@
-var express = require('express');
-
-var app = express();
-
+var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 1337
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
 
-app.get('/', function (req, res) {
-	res.sendfile('index.html');
-});
-
-app.get('register', function (req, res) {
-	
-});
-
-app.post('/send/:command', function (req, res) {
-	io.emmit('command');
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket){
-	console.log('a user connected');
+    socket.on('chat message', function(msg){
+        console.log(msg);
+        io.emit('chat message', msg);
+    });
 });
 
-
-var server = app.listen(1337,
-	function () {
-		console.info('Listening on port %d', server.address().port);
-	}
-);
+http.listen(server_port,server_ip_address ,function(){
+    console.log('listening on '+server_ip_address+' : '+server_port);
+});
