@@ -9,11 +9,20 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
+
 io.on('connection', function(socket){
-    socket.on('chat message', function(msg){
-        console.log(msg);
-        io.emit('chat message', msg+" s2");
-    });
+	socket.on('create', function(room) {
+		socket.join(room);
+		socket.on('chat message', function(msg){
+			console.log(msg);
+			io.to(room).emit('chat message', msg+" s2");
+		});
+	});
+
+});
+
+app.get('/send/:command', function (req, res) {
+	res.end('ds');
 });
 
 http.listen(server_port,server_ip_address ,function(){
