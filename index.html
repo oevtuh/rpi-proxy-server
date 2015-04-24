@@ -5,9 +5,9 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font: 13px Helvetica, Arial; }
-        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        .formMessage { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        .formMessage input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        .formMessage button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
         #messages { list-style-type: none; margin: 0; padding: 0; }
         #messages li { padding: 5px 10px; }
         #messages li:nth-child(odd) { background: #eee; }
@@ -15,11 +15,17 @@
 </head>
 <body>
 <ul id="messages"></ul>
-<form action="">
-    <input id="m" autocomplete="off" /><button>Send</button>
+
+<form class ="formMessage" action="">
+    <input id="messagesInput" autocomplete="off" /><button>Send</button>
 </form>
 <form class ='formCreateRoom' action="">
-	<input id="createRoomButton" autocomplete="off" /><button>Create Room</button>
+    <input id="userNameInput" autocomplete="off" placeholder="Enter your nick" />
+	<input id="createRoomInput" autocomplete="off" placeholder="Enter room" />
+    <button>Create/Join Room</button>
+</form>
+<form class ='formLeaveRoom' action="">
+    <input id="leaveRoomInput" autocomplete="off" placeholder="Enter room" /><button>Leave Room</button>
 </form>
 </body>
 <script src="/socket.io/socket.io.js"></script>
@@ -28,15 +34,22 @@
 <script>
 
 	var socket = io.connect();
-	$('form').submit(function(){
-		socket.emit('create', $('#createRoomButton').val());
+	$('.formCreateRoom').submit(function(){
+		socket.emit('createRoom', {Room: $('#createRoomInput').val(), UserName: $('#userNameInput').val()});
+        $('#userNameInput').val('')
+        $('#createRoomInput').val('');
 		return false;
 	});
 
+    $('.formLeaveRoom').submit(function(){
+        socket.emit('leaveRoom', $('#leaveRoomInput').val());
+        $('#leaveRoomInput').val('');
+        return false;
+    });
 
-    $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
+    $('.formMessage').submit(function(){
+        socket.emit('chat message', $('#messagesInput').val());
+        $('#messagesInput').val('');
         return false;
     });
     socket.on('chat message', function(msg){

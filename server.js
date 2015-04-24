@@ -11,13 +11,19 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
-	socket.on('create', function(room) {
-		socket.join(room);
+    console.log("connected");
+	socket.on('createRoom', function(data) {
+        console.log("room created " + data.Room);
+		socket.join(data.Room);
 		socket.on('chat message', function(msg){
 			console.log(msg);
-			io.to(room).emit('chat message', msg+" s2");
+			io.to(data.Room).emit('chat message', data.UserName+' : ' +  msg + '  --> in room ' + data.Room);
 		});
 	});
+    socket.on('leaveRoom', function(data) {
+        console.log("room leaved " + data.Room);
+        socket.leave(data.Room);
+    });
 
 });
 
