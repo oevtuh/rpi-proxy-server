@@ -5,5 +5,5 @@ module.exports.Execute = function (param){
 	var command = commandArray[0];
 	var device = commandArray[1];
 	var state = commandArray[2];
-	gpio[command](device, state );
+	gpio.Turn(device, state );
 }
