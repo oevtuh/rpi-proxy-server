@@ -3,24 +3,29 @@
  */
 var gpio = require('rpi-gpio');
 
-function GpioController(){
-	this.devices = {
-		redLed: 1,
-		greenLed: 2
-	};
+var devices = {
+	redLed: 1,
+	greenLed: 2
+};
+
+function directWrite(pin, value, callback) {
+	return gpio.write(pin, value, callback);
 }
 
-GpioController.prototype ={
-	TurnOn : function(pin){
-		console.log(pin);
-	},
-	TurnOff : function(pin){
-		console.log(pin);
-	},
-
-	Execute: function(device, command){
-		var pin = this.devices[device];
-		this[command](pin);
-	}
+module.exports.Turn = function(device , state){
+	console.log(device + " " +state);
+	var pin = devices[device];
+	directWrite(pin, state, function(){
+		console.log('foo');
+	})
 }
+
+
+
+
+
+
+
+
+
 

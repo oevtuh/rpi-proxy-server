@@ -17,7 +17,7 @@ io.on('connection', function(socket){
 		socket.join(data.Room);
 		socket.on('chat message', function(msg){
 			console.log(msg);
-			io.to(data.Room).emit('chat message', data.UserName+' : ' +  msg + '  --> in room ' + data.Room);
+			io.to(data.Room).emit('chat message', msg);
 		});
 	});
     socket.on('leaveRoom', function(data) {
